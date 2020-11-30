@@ -1,0 +1,16 @@
+ed468582a081036f423f1360771059c7 *DESCRIPTION
+90df21ab5b9ed828352cd99a5d41c3f3 *NAMESPACE
+ba735d6be449011867180b6e81d4b113 *R/AuxilaryFunctions.R
+31e389c96bf9f1f687cf822db362dea3 *R/HufferPark.R
+56c27cb25b0df666e9768b357f9f609a *R/KoltchinskiiSakhanenko.R
+3ff744b244d94ee05c5efbac3dfce396 *R/MPQ.R
+30d806b102081fed6eae43d583afd67b *R/PseudoGaussian.R
+d0d09901930897bdf478b1bf5d6edfb8 *R/Schott.R
+bfea7ac932cd9b8ffe5bfa03b6806624 *R/SkewOptimal.R
+ca5321557bd2b1212bf31e57429016bc *R/SphericalHarmonics-OrthBasis.R
+545cb33c9e64d11cc968638d54d291a1 *man/HufferPark.Rd
+a00f5cde506c137de65cc07b02257c2e *man/KoltchinskiiSakhanenko.Rd
+7fcb627cd772a0bf6e139aea36f5110e *man/MPQ.Rd
+214f9d9f077307d059cda5057dce520d *man/PseudoGaussian.Rd
+7f486d5666746869236c2e23c83ed069 *man/Schott.Rd
+e9ac017c68048346524952f34036261f *man/SkewOptimal.Rd
