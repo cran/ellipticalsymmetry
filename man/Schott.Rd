@@ -10,7 +10,7 @@ Schott(X)
 \item{X}{A numeric matrix.}
 }
 \value{
-A list with class \code{"htest"} containing the following components:
+An object of class \code{"htest"} containing the following components:
 \item{\code{statistic}}{The value of the test statistic.}
 \item{\code{pvalue}}{The p-value of the test.}
 \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -30,7 +30,7 @@ It has an asymptotic chi-squared distribution under the null hypothesis of ellip
 \examples{
 
 ## sepal width and length of the versicolor subset of the Iris data
-X = datasets::iris[51:100, 1:2]
+X = datasets::iris[51:100,1:2]
 
 Schott(X)
 

@@ -1,12 +1,12 @@
 
-#' Test for elliptical symmetry by Manzotti et al.
+#' Test for elliptical symmetry by A. Manzotti, F. J. Pérez, and A. J. Quiroz.
 #'
 #' @description Test for elliptical symmetry based on the averages of spherical harmonics.
 #'
 #' @param X A numeric matrix.
-#' @param epsilon A value which indicates the percentage of points close to origin which will not be used in the calculation. Default is set to 0.05.
+#' @param epsilon A value which indicates the proportion of points close to the origin which will not be used in the calculation. Default is set to 0.05.
 #'
-#' @return A list with class \code{"htest"} containing the following components:
+#' @return An object of class \code{"htest"} containing the following components:
 #'  \item{\code{statistic}}{The value of the test statistic.}
 #'  \item{\code{pvalue}}{The p-value of the test.}
 #'  \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -24,41 +24,41 @@
 #' @examples
 #'
 #' ## sepal width and length of the versicolor subset of the Iris data
-#' X = datasets::iris[51:100, 1:2]
+#' X = datasets::iris[51:100,1:2]
 #'
 #' MPQ(X)
 #'
 #' @export
 MPQ = function(X, epsilon = 0.05){
 
-  dname = deparse(substitute(X))
+  dname = deparse(substitute(X)) # get the data name
 
+  # The following condition cheks if data have the matrix form and if not, it converts data into a matrix if possible
   if(!is.matrix(X)) {
-    warning_message = paste("coercing '", dname, "' to a matrix.", sep = "")
-    warning(warning_message)
     X = as.matrix(X)
     if (!(is.matrix(X) && length(X) > 1)){
       stop("X is not in the valid matrix form.")
     }
   }
 
+  #The following condition checks if all matrix instances are numeric values
   else if(!is.numeric(X)){
     stop('X has to take numeric values')
   }
 
   data_size = dim(X)
-  n = data_size[1]
-  d = data_size[2]
+  n = data_size[1] #sample size
+  d = data_size[2] #dimension
 
-  theta = colMeans(X)
-  sigma = stats::cov(X)
-  sigma_root = spd_matrix_pow(sigma, -1/2)
-  Z = sweep(X, 2, theta)%*%sigma_root
-  norms = apply(Z, 1, function(x) norm(x, type='2'))
-  rho = stats::quantile(norms, epsilon)[[1]]
+  theta = colMeans(X) #estimator of the mean
+  sigma = stats::cov(X) #the unbiased estimator of the convariance matrix
+  sigma_root = spd_matrix_pow(sigma, -1/2)  #the square root of the inverse of the covariance matrix
+  Z = sweep(X, 2, theta)%*%sigma_root #data standardization
+  norms = apply(Z, 1, function(x) norm(x, type='2')) #norms of the standardized data
+  rho = stats::quantile(norms, epsilon)[[1]] #This is the treshold that is used to eliminate the norms that are smaller than it.
+
+  # The following lines calculate the test statistic as it is described in the article.
   statistic = 0
-
-
   for(i in seq2(1, d)){
     for (j  in seq2(i + 1, d)){
       for (k  in seq2(j + 1, d)){
@@ -231,18 +231,19 @@ MPQ = function(X, epsilon = 0.05){
     }
    }
   statistic= n*statistic
+  #the following three lines calculate the degree of freedom of the chi-squared distribution
   deg3 = choose(d + 2, 3) - d
   deg4 = choose(d + 3, 4) - choose(d + 1, 2)
   df = deg3 + deg4
   statistic = statistic[[1]]
-  p_val = 1 - stats::pchisq(statistic/(1-epsilon), df = df)[[1]]
+  p_val = 1 - stats::pchisq(statistic/(1-epsilon), df = df)[[1]]  #p value
 
   names(statistic) = 'statistic'
   res <- list(method = 'Test for elliptical symmetry by Manzzoti et al.',
               data.name = dname,
               statistic = statistic,
               p.value = p_val,
-              alternative = 'the distribution is not ellipticaly symmetric')
+              alternative = 'the distribution is not elliptically symmetric')
   class(res) <- "htest"
   return(res)
 }

@@ -4,21 +4,23 @@
 \alias{HufferPark}
 \title{Huffer and Park's test for elliptical symmetry}
 \usage{
-HufferPark(X, c, R = NaN, sector = "orthants", g = NaN)
+HufferPark(X, c, R = NA, sector = "orthants", g = NA, nJobs = -1)
 }
 \arguments{
 \item{X}{A numeric matrix.}
 
 \item{c}{The number of spherical shells that are used to divide the space.}
 
-\item{R}{The number of bootstrap replications.}
+\item{R}{The number of bootstrap replicates.}
 
-\item{sector}{A string that specifies the type of sectors used to divide the space. Currently supported options are \code{"orthants"}, \code{"permutation"} and \code{"bivariate_angles"}.}
+\item{sector}{A string that specifies the type of sectors used to divide the space. Currently supported options are \code{"orthants"}, \code{"permutations"} and \code{"bivariateangles"}.}
 
-\item{g}{A parameter that is used if \code{sector = "bivariate_angles"}. It denotes the number of regions used to divide the plane.}
+\item{g}{A parameter that is used if \code{sector = "bivariateangles"}. It denotes the number of regions used to divide the plane.}
+
+\item{nJobs}{The number of CPU cores used for the calculation. The default value -1 indicates that all cores except one are used.}
 }
 \value{
-A list with class \code{"htest"} containing the following components:
+An object of class \code{"htest"} containing the following components:
 \item{\code{statistic}}{The value of the test statistic.}
 \item{\code{pvalue}}{The p-value of the test.}
 \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -31,35 +33,35 @@ Pearson chi-square type test for elliptical symmetry.
 Huffer and Park (2007) propose a Pearson chi-square type test with multi-dimensional cells.
 After dividing the space into \code{c} spherical shells  and \code{g} sectors (in total \code{gc} cells),
 and after determining the observed cell counts, the test statistic is easily computed.
-\code{sectors} is an option that allows the user to specify the type of sectors used to divide the space.
-Currently supported options are \code{"orthants"}, \code{"permutation"} and \code{"bivariate_angles"},
+\code{sector} is an option that allows the user to specify the type of sectors used to divide the space.
+Currently supported options are \code{"orthants"}, \code{"permutations"} and \code{"bivariateangles"},
 the last one being available only in dimension 2. The \code{g} argument indicates the number of sectors.
-The user has to choose \code{g} only if \code{sectors = "bivariate_angles"} and it denotes the number of regions used to divide the plane.
+The user has to choose \code{g} only if \code{sector = "bivariateangles"} and it denotes the number of regions used to divide the plane.
 In this case, regions consist of points whose angle in polar coordinates is between \eqn{2(m-1)\pi/g} and \eqn{2m\pi/g} for \eqn{m} in \eqn{(1,..., g)}.
-If \code{sectors} is set to \code{"orthants"}, then \code{g} is fixed and equal to \eqn{2^d}, while for \code{sectors = "permutation"} \code{g} is \eqn{d}!.
+If \code{sector} is set to \code{"orthants"}, then \code{g} is fixed and equal to \eqn{2^d}, while for \code{sector = "permutations"} \code{g} is \eqn{d}!.
 No matter what type of sectors is chosen, the user has to specify the number of spherical shells that are used to divide the space, which is \code{c}.
 The value of \code{c} should be such that the average cell counts \eqn{n/(gc)} are not too small.
 
-The asymptotic distribution is available only under \code{sectors = "orthants"} when the underlying distribution is close to normal.
+The asymptotic distribution is available only under \code{sector = "orthants"} when the underlying distribution is close to normal.
 Otherwise, bootstrap procedures are required and the user can freely choose the number of bootstrap replicates, denoted as \code{R}.
-Note that by default \code{sectors} is set to \code{"orthants"} and \code{R = NaN}, which means that the non-bootstrap version of the test
+Note that by default \code{sector} is set to \code{"orthants"} and \code{R = NA}, which means that the non-bootstrap version of the test
 will be performed unless the user specifies \code{R}.
 }
 \examples{
 
 
 ## sepal width and length of the versicolor subset of the Iris data
-X = datasets::iris[51:100, 1:2]
+X = datasets::iris[51:100,1:2]
 
 ## the non-bootstrap test
 HufferPark(X, c = 2)
 
 ## the bootstrap tests
-HufferPark(X, c = 2, R = 10, sector='orthants')
+HufferPark(X, c = 2, R = 10, sector="orthants", nJobs=2)
 
-HufferPark(X[,1:2], c = 3, R = 10, sector='bivariate_angles', g = 3)
+HufferPark(X, c = 2, R = 10, sector="bivariateangles", g = 3, nJobs=2)
 
-HufferPark(X, c = 2, R = 10, sector='permutation')
+HufferPark(X, c = 2, R = 10, sector="permutations", nJobs=2)
 }
 \references{
 Huffer, Fred W., & Park, C., (2007). A test for elliptical symmetry. \emph{Journal of Multivariate Analysis}, \bold{98}(2), 256-281.

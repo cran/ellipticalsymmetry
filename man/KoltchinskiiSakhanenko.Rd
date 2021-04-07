@@ -4,15 +4,17 @@
 \alias{KoltchinskiiSakhanenko}
 \title{Koltchinskii and Sakhanenko's test for elliptical symmetry}
 \usage{
-KoltchinskiiSakhanenko(X, R = 1000)
+KoltchinskiiSakhanenko(X, R = 1000, nJobs = -1)
 }
 \arguments{
 \item{X}{A numeric matrix.}
 
-\item{R}{The number of bootstrap replications.}
+\item{R}{The number of bootstrap replicates.}
+
+\item{nJobs}{The number of CPU cores used for the calculation. The default value -1 indicates that all cores except one are used.}
 }
 \value{
-A list with class \code{"htest"} containing the following components:
+An object of class \code{"htest"} containing the following components:
 \item{\code{statistic}}{The value of the test statistic.}
 \item{\code{pvalue}}{The p-value of the test.}
 \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -30,9 +32,9 @@ that are affine invariant and consistent against any fixed alternative. This tes
 \examples{
 
 ## sepal width and length of the versicolor subset of the Iris data
-X = datasets::iris[51:100, 1:2]
+X = datasets::iris[51:100,1:2]
 
-KoltchinskiiSakhanenko(X, R = 10)
+KoltchinskiiSakhanenko(X, R = 10, nJobs=2)
 }
 \references{
 Koltchinskii, V., & Sakhanenko, L., (2000). Testing for ellipsoidal symmetry of a multivariate distribution. \emph{High Dimensional Probability II}, 493-510, Springer.

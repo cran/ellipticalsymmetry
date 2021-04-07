@@ -1,3 +1,4 @@
+#This function caluclates the moments of degree 4 using Kronecker (tensor) product. See the article for more details.
 getM4 <- function(x, m) {
   scal_prod = (x - m) %*% t(x - m)
   kron_prod = scal_prod %x% scal_prod
@@ -9,7 +10,7 @@ getM4 <- function(x, m) {
 #' @description Test for elliptical symmetry.
 #'
 #' @param X A numeric matrix.
-#' @return A list with class \code{"htest"} containing the following components:
+#' @return An object of class \code{"htest"} containing the following components:
 #'  \item{\code{statistic}}{The value of the test statistic.}
 #'  \item{\code{pvalue}}{The p-value of the test.}
 #'  \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -27,38 +28,38 @@ getM4 <- function(x, m) {
 #' @examples
 #'
 #' ## sepal width and length of the versicolor subset of the Iris data
-#' X = datasets::iris[51:100, 1:2]
+#' X = datasets::iris[51:100,1:2]
 #'
 #' Schott(X)
 #'
 #' @export
 Schott = function(X) {
 
-  dname = deparse(substitute(X))
+  dname = deparse(substitute(X)) # get the data name
 
+  # The following condition cheks if data have the matrix form. If not, it tries to convert data into a matrix if possible.
   if(!is.matrix(X)) {
-    warning_message = paste("coercing '", dname, "' to a matrix.", sep = "")
-    warning(warning_message)
     X = as.matrix(X)
     if (!(is.matrix(X) && length(X) > 1)){
       stop("X is not in the valid matrix form.")
     }
   }
 
+  # The following condition checks if all matrix instances are numeric values.
   else if(!is.numeric(X)){
     stop('X has to take numeric values')
   }
 
   data_size = dim(X)
-  n = data_size[1]
-  d = data_size[2]
-  theta = colMeans(X)
-  sigma = stats::cov(X)
-  #sigma_inv = solve(sigma)
-  sigma_root = spd_matrix_pow(sigma, -1/2)
+  n = data_size[1] #sample size
+  d = data_size[2] #dimension
+  theta = colMeans(X) #estimator of the mean
+  sigma = stats::cov(X) #the unbiased estimator of the convariance matrix
+  sigma_root = spd_matrix_pow(sigma, -1/2) #the square root of the inverse of the covariance matrix
 
-  Z = sweep(X, 2, theta)%*%sigma_root
+  Z = sweep(X, 2, theta)%*%sigma_root #data standardization
 
+  # The following lines calculate the test statistic as it is described in the article.
   M4 = matrix(0, nrow = d * d, ncol = d * d)
   for (i in seq(1, n)) {
     M4 = M4 + getM4(X[i, ], theta)
@@ -87,17 +88,18 @@ Schott = function(X) {
   M4_trace = sum(diag(M4_stand_sq))
 
   statistic = n * (beta1 * M4_trace + beta2 * t(vec_id) %*% M4_stand_sq %*% vec_id -
-                      (3 * beta1 + (d + 2) * beta2) * d * (d + 2) * kapa ^ 2)
+                      (3 * beta1 + (d + 2) * beta2) * d * (d + 2) * kapa ^ 2) #test statistic
 
   statistic = statistic[[1]]
-  df = d ^ 2  + d * (d - 1) * (d ^ 2 + 7 * d - 6) / 24 - 1
-  p_val = 1 - stats::pchisq(statistic, df = df)[[1]]
+  df = d ^ 2  + d * (d - 1) * (d ^ 2 + 7 * d - 6) / 24 - 1 #This line calculates the degree of freedom of the chi-squared distribution.
+  p_val = 1 - stats::pchisq(statistic, df = df)[[1]] #p value
+  #The following lines construct htest object 'res' which is the output of this function.
   names(statistic) = 'statistic'
   res <- list(method = 'Schott test for elliptical symmetry',
               data.name = dname,
               statistic = statistic,
               p.value = p_val,
-              alternative = 'the distribution is not ellipticaly symmetric')
+              alternative = 'the distribution is not elliptically symmetric')
   class(res) <- "htest"
   return(res)
 }

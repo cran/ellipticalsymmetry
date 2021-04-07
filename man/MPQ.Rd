@@ -2,17 +2,17 @@
 % Please edit documentation in R/MPQ.R
 \name{MPQ}
 \alias{MPQ}
-\title{Test for elliptical symmetry by Manzotti et al.}
+\title{Test for elliptical symmetry by A. Manzotti, F. J. Pérez, and A. J. Quiroz.}
 \usage{
 MPQ(X, epsilon = 0.05)
 }
 \arguments{
 \item{X}{A numeric matrix.}
 
-\item{epsilon}{A value which indicates the percentage of points close to origin which will not be used in the calculation. Default is set to 0.05.}
+\item{epsilon}{A value which indicates the proportion of points close to the origin which will not be used in the calculation. Default is set to 0.05.}
 }
 \value{
-A list with class \code{"htest"} containing the following components:
+An object of class \code{"htest"} containing the following components:
 \item{\code{statistic}}{The value of the test statistic.}
 \item{\code{pvalue}}{The p-value of the test.}
 \item{\code{alternative}}{A character string describing the alternative hypothesis.}
@@ -31,7 +31,7 @@ but does not have asymptotic power 100\% against all alternatives.
 \examples{
 
 ## sepal width and length of the versicolor subset of the Iris data
-X = datasets::iris[51:100, 1:2]
+X = datasets::iris[51:100,1:2]
 
 MPQ(X)
 
